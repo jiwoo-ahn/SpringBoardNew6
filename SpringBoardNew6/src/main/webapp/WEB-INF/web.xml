@@ -32,7 +32,7 @@
 	
 	<!-- 한글 처리 인코딩 UTF-8 필터 -->
 	<filter>
-		<filter-name></filter-name>
+		<filter-name>setEncoding</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
