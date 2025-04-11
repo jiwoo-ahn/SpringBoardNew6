@@ -9,19 +9,25 @@
 	</div>
 	<!-- /.box-header -->
 	<!-- form start -->
-	<form role="form">
+	<!-- action 해당하는 속성정보가 없음 
+		  => 자기 자신의 페이지 호출
+		     (/board/regist 호출)
+	-->
+	<form role="form" method="post">
 		<div class="box-body">
 			<div class="form-group">
-				<label for="exampleInputEmail1">제 목</label> <input type="text" class="form-control" id="exampleInputEmail1" placeholder="제목을 입력하시오.">
+				<label for="exampleInputEmail1">제 목</label> 
+				<input type="text" name="title" class="form-control" id="exampleInputEmail1" placeholder="제목을 입력하시오.">
 			</div>
 
 			<div class="form-group">
-				<label for="exampleInputEmail1">작성자 이름을 입력하시오.</label> <input type="text" class="form-control" id="exampleInputEmail1" placeholder="이름을 입력하시오.">
+				<label for="exampleInputEmail1">작성자 이름을 입력하시오.</label> 
+				<input type="text" name="writer" class="form-control" id="exampleInputEmail1" placeholder="이름을 입력하시오.">
 			</div>
 
 			<div class="form-group">
 				<label>내용</label>
-				<textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+				<textarea name="content" class="form-control" rows="3" placeholder="Enter ..."></textarea>
 			</div>
 		</div>
 		<!-- /.box-body -->
