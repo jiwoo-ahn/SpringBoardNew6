@@ -14,4 +14,12 @@
   		insert into tbl_board (title, content, writer) 
   		values(#{title}, #{content}, #{writer})
   	</insert>
+  	<!-- 게시판 글쓰기 -->	
+  	
+  	<!-- 게시판 전체 목록 조회 -->
+  	<select id="listAll" resultType="BoardVO">
+  		select * from tbl_board 
+  		order by bno desc
+  	</select>
+  	<!-- 게시판 전체 목록 조회 -->
   </mapper>
