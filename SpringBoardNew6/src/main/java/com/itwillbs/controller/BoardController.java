@@ -1,5 +1,7 @@
 package com.itwillbs.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -77,13 +79,20 @@ public class BoardController {
 	// @GetMapping은 4.3.X 버전대 부터 사용 가능
 	// @RequestMapping(value = "/listAll")
 	// 도 가능 기본이 GET 이기 때문
-	public void listAllGET(@ModelAttribute("result") String result) throws Exception{
+	public void listAllGET(Model model, @ModelAttribute("result") String result) throws Exception{
 		logger.info("listAllGET() 실행");
 		
 		// 전달정보 result 저장
 		logger.info("result : " + result);
 		
 		// DB 데이터를 가져와서 화면(view)에 출력
+		// => 서비스 -> DAO 호출
+		List<BoardVO> boardList = bService.getBoardListAll();
+		
+		logger.info("boardList : {} 개", boardList.size());
+		
+		// => 생성된 데이터를 뷰페이지에 전달 (컨트롤러의 정보를 -> jsp : Model객체)
+		model.addAttribute("boardList", boardList);
 		
 		// 연결된 뷰페이지로 이동(/board/listAll.jsp)
 		

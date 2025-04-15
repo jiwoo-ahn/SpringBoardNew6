@@ -1,5 +1,7 @@
 package com.itwillbs.service;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -20,11 +22,11 @@ public class BoardServiceImpl implements BoardService {
 	
 	// BoardDAO 객체 주입
 	@Inject
-	private BoardDAO bDAO;
+	private BoardDAO bDao;
 	
 	@Override
 	public String getServerTime() {
-		return bDAO.getServerTime();
+		return bDao.getServerTime();
 	}
 	
 	@Override
@@ -32,8 +34,20 @@ public class BoardServiceImpl implements BoardService {
 		logger.info("게시판 글쓰기 - registBoard(BoardVO vo) 실행");
 		logger.info("전달받은 정보를 DAO로 전달 + DAO 동작을 처리");
 		
-		bDAO.insertBoard(vo);
+		bDao.insertBoard(vo);
 		
 		logger.info(" DAO 실행 완료 -> 컨트롤러로 이동 ");
+	}
+	
+	@Override
+	public List<BoardVO> getBoardListAll() throws Exception {
+		logger.info("getBoardListAll() 실행");
+		
+		// DAO 동작 호출
+		List<BoardVO> boardList = bDao.selectBoardListAll();
+		
+		logger.info("boardList : {} 개", boardList.size());
+		
+		return boardList;
 	}
 }
