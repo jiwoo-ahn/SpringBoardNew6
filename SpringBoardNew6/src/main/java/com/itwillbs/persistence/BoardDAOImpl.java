@@ -59,5 +59,13 @@ public class BoardDAOImpl implements BoardDAO {
 		
 		return boardList;
 	}
+	
+	@Override
+	public BoardVO selectBoard(int bno) throws Exception {
+		logger.info("selectBoard(int bno) 실행");
+		// mapper 해당 SQL 구문 호출
+		
+		return null;
+	}
 
 }
