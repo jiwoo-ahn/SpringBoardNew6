@@ -21,4 +21,7 @@ public interface BoardDAO {
 	
 	// 게시판 특정 글 정보를 조회
 	public BoardVO selectBoard(int bno) throws Exception;
+	
+	// 특정 글 조회수 1증가
+	public void updateViewCnt(int bno) throws Exception;
 }

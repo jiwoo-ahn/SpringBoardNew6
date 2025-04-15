@@ -101,7 +101,7 @@ public class BoardController {
 	
 	// 게시판 본문보기 GET
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public String readGET(@RequestParam("bno") int bno) throws Exception{
+	public String readGET(Model model, @RequestParam("bno") int bno) throws Exception{
 		
 		logger.info("readGET() 실행");
 		
@@ -110,14 +110,18 @@ public class BoardController {
 		// 전달정보(bno)를 저장(글의 정보를 구분할 수 있는 키워드를 받아와야 함)
 		logger.info("bno : {}", bno);
 		
-		// 서비스 -> 글 하나의 정보를 조회하는 동작 호출
+		// 서비스 -> 글 조회수를 1씩 증가 동작
+		bService.increaseViewsCnt(bno);
 		
+		// 서비스 -> 글 하나의 정보를 조회하는 동작 호출
+		BoardVO vo = bService.getBoard(bno);
+		logger.info("vo : {}", vo);
 		
 		// DAO에서 받아온 글 정보를 연결된 뷰페이지(/board/read.jsp)로 이동
-		
+		model.addAttribute(vo);
+		//model.addAttribute(bService.getBoard(bno));
 		
 		return "/board/read";
 	}
-	
 	
 }
