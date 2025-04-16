@@ -31,7 +31,7 @@
   	<!-- 게시판 특정 글 정보 조회 -->
   	
   	<!-- 특정 글 조회수 1 증가 -->
-	<update id="updateViewcnt">
+	<update id="increaseViewCnt">
 		update tbl_board set viewcnt=viewcnt+1
 		where bno=#{bno}
 	</update>

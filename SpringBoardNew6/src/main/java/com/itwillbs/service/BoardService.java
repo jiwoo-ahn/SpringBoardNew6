@@ -20,5 +20,5 @@ public interface BoardService {
 	public BoardVO getBoard(int bno) throws Exception;
 	
 	// 특정 글(bno) 조회수 1증가
-	public void increaseViewsCnt(int bno) throws Exception;
+	public void increaseViewCnt(int bno) throws Exception;
 }

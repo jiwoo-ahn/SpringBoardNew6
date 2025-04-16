@@ -3,6 +3,7 @@ package com.itwillbs.controller;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,9 @@ public class BoardController {
 	// @GetMapping은 4.3.X 버전대 부터 사용 가능
 	// @RequestMapping(value = "/listAll")
 	// 도 가능 기본이 GET 이기 때문
-	public void listAllGET(Model model, @ModelAttribute("result") String result) throws Exception{
+	public void listAllGET(HttpSession session, 
+			               Model model, 
+			               @ModelAttribute("result") String result) throws Exception{
 		logger.info("listAllGET() 실행");
 		
 		// 전달정보 result 저장
@@ -95,13 +98,18 @@ public class BoardController {
 		// => 생성된 데이터를 뷰페이지에 전달 (컨트롤러의 정보를 -> jsp : Model객체)
 		model.addAttribute("boardList", boardList);
 		
+		// 조회수 증가해도 되는지 안되는지 체크하기 위한 용도
+		// list에서 read 로 왔을 때만 true => 조회수 증가
+		// session 영역에 정보를 저장 & 전달
+		session.setAttribute("updateCheck", true);
+		
 		// 연결된 뷰페이지로 이동(/board/listAll.jsp)
 		
 	}
 	
 	// 게시판 본문보기 GET
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public String readGET(Model model, @RequestParam("bno") int bno) throws Exception{
+	public String readGET(HttpSession session, Model model, @RequestParam("bno") int bno) throws Exception{
 		
 		logger.info("readGET() 실행");
 		
@@ -110,8 +118,14 @@ public class BoardController {
 		// 전달정보(bno)를 저장(글의 정보를 구분할 수 있는 키워드를 받아와야 함)
 		logger.info("bno : {}", bno);
 		
-		// 서비스 -> 글 조회수를 1씩 증가 동작
-		bService.increaseViewsCnt(bno);
+		// 리스트 -> 본문 이동 시마다 조회수가 증가
+		// (본문에서 새로고침 수행시 조회수 증가 X)
+		boolean updateCheck = (boolean)session.getAttribute("updateCheck");
+		if(updateCheck) {
+			// 서비스 -> 글 조회수를 1씩 증가 동작
+			bService.increaseViewCnt(bno);
+			session.setAttribute("updateCheck", false);
+		}
 		
 		// 서비스 -> 글 하나의 정보를 조회하는 동작 호출
 		BoardVO vo = bService.getBoard(bno);
@@ -119,9 +133,26 @@ public class BoardController {
 		
 		// DAO에서 받아온 글 정보를 연결된 뷰페이지(/board/read.jsp)로 이동
 		model.addAttribute(vo);
-		//model.addAttribute(bService.getBoard(bno));
+		model.addAttribute(bService.getBoard(bno));
 		
 		return "/board/read";
 	}
+	
+	// 글정보 수정하기-GET
+	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+	public void modifyGET(Model model, @ModelAttribute("bno") int bno) throws Exception{
+		logger.info("modifyGET() 실행");
+		
+		// 전달정보 저장(파라메터)
+		logger.info("bno : {}", bno);
+		
+		// bno를 사용해서 정보를 DB에서 가져오기
+		BoardVO vo = bService.getBoard(bno);
+		
+		// 연결된 뷰페이지에 출력
+		model.addAttribute(vo);
+	}
+	
+	// 글정보 수정하기-POST
 	
 }

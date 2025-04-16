@@ -64,9 +64,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public void increaseViewsCnt(int bno) throws Exception {
-		logger.info("increaseViewsCnt(int bno) 실행");
-	    
+	public void increaseViewCnt(int bno) throws Exception {
+		logger.info("increaseViewCnt(int bno) 실행");
 		bDao.updateViewCnt(bno);  // 조회수 증가 DAO 호출
 	}
 }
