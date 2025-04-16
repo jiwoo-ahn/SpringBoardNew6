@@ -15,4 +15,10 @@ public interface BoardService {
 	
 	//게시판 글 전체 목록 조회
 	public List<BoardVO> getBoardListAll() throws Exception;
+	
+	// 특정 글(bno) 정보를 조회
+	public BoardVO getBoard(int bno) throws Exception;
+	
+	// 특정 글(bno) 조회수 1증가
+	public void increaseViewCnt(int bno) throws Exception;
 }
