@@ -74,4 +74,10 @@ public class BoardServiceImpl implements BoardService {
 		logger.info("modifyBoard(BoardVO uvo) 실행");
 		bDao.updateBoard(uvo);
 	}
+	
+	@Override
+	public Integer removeBoard(BoardVO dvo) throws Exception {
+		logger.info("removeBoard(BoardVO dvo) 실행");
+		return bDao.deleteBoard(dvo);
+	}
 }

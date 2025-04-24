@@ -27,4 +27,8 @@ public interface BoardDAO {
 	
 	// 특정 글 수정
 	public void updateBoard(BoardVO uvo) throws Exception;
+	
+	// 특정 글 삭제
+	// int 대신 Integer 사용하는 이유 - 데이터 안전성? 버전에 따라 auto언박싱?에러???
+	public Integer deleteBoard(BoardVO dvo) throws Exception;
 }
