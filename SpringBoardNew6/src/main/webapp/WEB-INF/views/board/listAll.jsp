@@ -62,12 +62,28 @@
 				  title: "글쓰기 완료!",
 				  text: "게시판 리스트로 이동합니다",
 				  icon: "success"
-				});
+			});
 			
 		}
 		
 		if(result == "modifyOK"){
 			Swal.fire("글 수정 완료!");
+		}
+		
+		if(result == "deleteOK"){
+			Swal.fire({
+				  title: "글 삭제 완료!",
+				  text: "게시판 리스트로 이동합니다",
+				  icon: "success"
+			});
+		}
+		
+		if(result == "deleteErr"){
+			Swal.fire({
+				  title: "글 삭제 실패!",
+				  text: "게시판 리스트로 이동합니다",
+				  icon: "errir"
+			});
 		}
 	</script>
 	

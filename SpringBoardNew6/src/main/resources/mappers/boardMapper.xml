@@ -44,4 +44,12 @@
 		where bno=#{bno}
 	</update>
   	<!-- 특정 게시판 글 수정 -->
+  	
+  	<!-- 특정 게시판 글 삭제 -->
+	<delete id="deleteBoard">
+		delete from tbl_board
+		where bno=#{bno}
+	</delete>
+  	<!-- 특정 게시판 글 삭제 -->
+  	
   </mapper>

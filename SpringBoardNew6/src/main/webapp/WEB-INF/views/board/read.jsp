@@ -45,8 +45,11 @@
 		<!-- /.box-body -->
 
 		<div class="box-footer">
-			<button type="submit" class="btn btn-danger">수정하기</button>
-			<button type="submit" class="btn btn-warning">삭제하기</button>
+			<!-- 아이디가 존재할 때 -->
+			<c:if test="${!empty id}">
+				<button type="submit" class="btn btn-danger">수정하기</button>
+				<button type="submit" class="btn btn-warning">삭제하기</button>
+			</c:if>
 			<button type="submit" class="btn btn-primary">목록으로</button>
 		</div>
 </div>
@@ -79,6 +82,9 @@
 		//삭제하기 버튼 클릭시
 		$(".btn-warning").click(function(){
 			alert("삭제하기 버튼 클릭!");
+			fr.attr("action","/board/remove");
+			fr.attr("method","post");
+			fr.submit();
 		})
 	});
 	

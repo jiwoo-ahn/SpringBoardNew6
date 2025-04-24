@@ -24,4 +24,7 @@ public interface BoardService {
 	
 	// 특정 글 정보를 수정
 	public void modifyBoard(BoardVO uvo) throws Exception;
+	
+	// 특정 글 정보를 삭제
+	public Integer removeBoard(BoardVO dvo) throws Exception;
 }
