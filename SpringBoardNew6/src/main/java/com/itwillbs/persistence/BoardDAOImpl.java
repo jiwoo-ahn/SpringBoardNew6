@@ -73,5 +73,10 @@ public class BoardDAOImpl implements BoardDAO {
 		logger.info("updateViewCnt(int bno) 실행");
 		sqlSession.update(NAMESPACE + "increaseViewCnt", bno);
 	}
-
+	
+	@Override
+	public void updateBoard(BoardVO uvo) throws Exception {
+		logger.info("updateBoard(BoardVO uvo) 실행");
+		sqlSession.update(NAMESPACE + "updateBoard", uvo);
+	}
 }

@@ -57,8 +57,31 @@
 		//alert(result);
 		
 		if(result == "createOK"){
-			alert(" 글쓰기 완료! ");
+			//alert(" 글쓰기 완료! ");
+			Swal.fire({
+				  title: "글쓰기 완료!",
+				  text: "게시판 리스트로 이동합니다",
+				  icon: "success"
+				});
+			
 		}
+		
+		if(result == "modifyOK"){
+			Swal.fire("글 수정 완료!");
+		}
+	</script>
+	
+	<!-- 헤더에 추가해 놓음 -->
+	<!-- <script src="~~/jQuery-2.1.4.min.js"></script> -->
+	<script type="text/javascript">
+	// JS사용
+	// 사용가능
+	// Swal.fire("SweetAlert2 is working!");
+	
+	//제이쿼리(jQuery) 사용 선언
+		/* $(document).ready(function(){
+			Swal.fire("SweetAlert2 is working!");
+		}); */
 	</script>
 
 <%@ include file="../include/footer.jsp"%>

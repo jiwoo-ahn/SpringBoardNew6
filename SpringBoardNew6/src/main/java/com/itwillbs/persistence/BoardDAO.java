@@ -24,4 +24,7 @@ public interface BoardDAO {
 	
 	// 특정 글 조회수 1증가
 	public void updateViewCnt(int bno) throws Exception;
+	
+	// 특정 글 수정
+	public void updateBoard(BoardVO uvo) throws Exception;
 }

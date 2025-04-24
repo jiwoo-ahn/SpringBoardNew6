@@ -29,6 +29,9 @@
     
   </head>
   
+  	<!-- sweetalert2 라이브러리 추가 -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
       <!-- jQuery 2.1.4 -->
     <script src="${pageContext.request.contextPath}/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
   <body class="skin-blue sidebar-mini">

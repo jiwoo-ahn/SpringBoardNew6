@@ -68,4 +68,10 @@ public class BoardServiceImpl implements BoardService {
 		logger.info("increaseViewCnt(int bno) 실행");
 		bDao.updateViewCnt(bno);  // 조회수 증가 DAO 호출
 	}
+	
+	@Override
+	public void modifyBoard(BoardVO uvo) throws Exception {
+		logger.info("modifyBoard(BoardVO uvo) 실행");
+		bDao.updateBoard(uvo);
+	}
 }
