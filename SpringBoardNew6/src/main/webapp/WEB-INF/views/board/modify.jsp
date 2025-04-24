@@ -17,7 +17,7 @@
 		<div class="box-body">
 			<div class="form-group">
 				<label for="exampleInputEmail1">번 호</label> 
-				<input type="text" name="title" class="form-control" id="exampleInputEmail1" value="${boardVO.bno}" readonly>
+				<input type="text" name="bno" class="form-control" id="exampleInputEmail1" value="${boardVO.bno}" readonly>
 			</div>
 		
 			<div class="form-group">

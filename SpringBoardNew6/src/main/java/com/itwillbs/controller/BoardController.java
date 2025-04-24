@@ -44,7 +44,7 @@ public class BoardController {
 	@RequestMapping(value = "/regist", method = RequestMethod.GET)
 	public void registGET() throws Exception{
 		logger.info("registGET() 실행");
-		logger.info("글쓰기 뷰페이지(/board/regist.jps)를 연결해서 보여줌");
+		logger.info("글쓰기 뷰페이지(/board/regist.jsp)를 연결해서 보여줌");
 	}
 	
 	// 게시판 글쓰기 - POST
@@ -154,5 +154,25 @@ public class BoardController {
 	}
 	
 	// 글정보 수정하기-POST
+	@RequestMapping(value = "/modify", method = RequestMethod.POST)
+	public String modifyPOST(RedirectAttributes rttr,
+			/*@ModelAttribute*/ BoardVO uvo) throws Exception {
+		logger.info("modifyPOST() 실행 ");
+		
+		// 한글처리 인코딩 생략 -> 필터처리 해놨음(web.xml)
+		
+		// 전달된 정보(수정할 내용 - 파라메터) 저장 
+		// => 매개변수에 BoardVO를 적어줌으로써 파라메터 자동 수집
+		logger.info("uvo : " + uvo);
+		
+		// 서비스 - 사용자 게시판 글 수정하는 메서드 호출
+		bService.modifyBoard(uvo);
+		logger.info("게시판 수정 성공");
+		
+		// 리스트(글 목록) 페이지로 이동 + "수정 완료" alert 출력
+		rttr.addFlashAttribute("result", "modifyOK");
+		
+		return "redirect:/board/listAll";
+	}
 	
 }
