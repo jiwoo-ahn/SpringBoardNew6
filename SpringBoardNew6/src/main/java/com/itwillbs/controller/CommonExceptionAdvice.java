@@ -32,6 +32,7 @@ public class CommonExceptionAdvice {
 		logger.info("" + e.toString());
 		model.addAttribute("e", e);
 		
+		// 예전에 사용하던 방식(레거시 코드)
 		//ModelAndView 객체 사용해서 전달 => Model과 View를 한번에 저장
 		//		ModelAndView mav = new ModelAndView();
 		//		mav.setView(viewName);
