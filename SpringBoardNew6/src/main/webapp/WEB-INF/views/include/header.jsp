@@ -34,7 +34,7 @@
   
       <!-- jQuery 2.1.4 -->
     <script src="${pageContext.request.contextPath}/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
-  <body class="skin-blue sidebar-mini">
+  <body class="skin-yellow-light sidebar-mini">
     <div class="wrapper">
       
       <header class="main-header">
