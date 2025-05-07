@@ -3,6 +3,7 @@ package com.itwillbs.persistence;
 import java.util.List;
 
 import com.itwillbs.domain.BoardVO;
+import com.itwillbs.domain.Criteria;
 
 /**
  * DB의 정보를 처리하는 객체
@@ -31,4 +32,8 @@ public interface BoardDAO {
 	// 특정 글 삭제
 	// int 대신 Integer 사용하는 이유 - 데이터 안전성? 버전에 따라 auto언박싱?에러???
 	public Integer deleteBoard(BoardVO dvo) throws Exception;
+	
+	// 게시판 목록 조회(+페이징 처리)
+	public List<BoardVO> listPage(int page) throws Exception;
+	public List<BoardVO> listPage(Criteria cri) throws Exception;
 }

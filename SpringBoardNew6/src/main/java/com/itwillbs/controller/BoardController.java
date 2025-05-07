@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BoardVO;
+import com.itwillbs.domain.Criteria;
 import com.itwillbs.service.BoardService;
 
 @Controller
@@ -110,6 +111,46 @@ public class BoardController {
 		
 	}
 	
+	// 게시판 목록 - GET
+	@RequestMapping(value = "/listPage", method = RequestMethod.GET)
+	// @GetMapping(value="/listAll")
+	// @GetMapping은 4.3.X 버전대 부터 사용 가능
+	// @RequestMapping(value = "/listAll")
+	// 도 가능 기본이 GET 이기 때문
+	
+	// Criteria cri 를 매개변수로 추가하는 이유
+	// listPage 주소를 불렀을 때 Criteria cri 객체를 담을 공간이 있어야 함
+	// Criteria cri 객체를 담을 공간이 있어야 listPage 페이지를 실행할 때
+	// 다른 페이지를 보고 싶을 때 적절한 페이지 번호를 출력하도록 Criteria cri를 조작(?할 수 있다
+	// Criteria cri를 통해 Criteria cri 를 통해 원하는 페이지를 출력할 수 있다.
+	public String listPageGET(Criteria cri, HttpSession session, 
+			               Model model, 
+			               @ModelAttribute("result") String result) throws Exception{
+		logger.info("listPageGET() 실행");
+		
+		// 전달정보 result 저장
+		logger.info("result : " + result);
+		
+		List<BoardVO> boardList = bService.getBoardListPage(cri);
+		
+		logger.info("boardList : {} 개", boardList.size());
+		
+		// => 생성된 데이터를 뷰페이지에 전달 (컨트롤러의 정보를 -> jsp : Model객체)
+		model.addAttribute("boardList", boardList);
+		
+		// 조회수 증가해도 되는지 안되는지 체크하기 위한 용도
+		// list에서 read 로 왔을 때만 true => 조회수 증가
+		// session 영역에 정보를 저장 & 전달
+		session.setAttribute("updateCheck", true);
+
+		// 임시로 로그인 대신하는 정보
+		session.setAttribute("id", "ok");
+		
+		// 연결된 뷰페이지로 이동(/board/listAll.jsp)
+		return "/board/listAll";
+	}
+	
+	
 	// 게시판 본문보기 GET
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	public String readGET(HttpSession session, Model model, @RequestParam("bno") int bno) throws Exception{
@@ -202,4 +243,5 @@ public class BoardController {
 		rttr.addFlashAttribute("result", "deleteOK");
 		return "redirect:/board/listAll";
 	}
+	
 }
