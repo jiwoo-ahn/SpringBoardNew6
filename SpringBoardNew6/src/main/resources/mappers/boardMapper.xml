@@ -52,4 +52,27 @@
 	</delete>
   	<!-- 특정 게시판 글 삭제 -->
   	
+  	<!-- 게시판 목록 조회(페이징처리) -->
+  	<select id="listPage" resultType="BoardVO">
+  		select * from tbl_board
+  		<!-- order by bno desc, regdate desc -->
+  		<!-- limit 0,10 -->
+  		limit #{page}, 10
+  	</select>
+  	<!-- 게시판 목록 조회(페이징처리) -->
+  	
+  	<!-- 게시판 목록 조회(페이징처리) -->
+  	<select id="listCri" resultType="BoardVO">
+  		select * from tbl_board
+  		order by bno desc, regdate desc
+  		<!-- limit 0,10 -->
+  		limit #{startPage}, #{pageSize}
+  	</select>
+  	<!-- 게시판 목록 조회(페이징처리) -->
+  	
+  	<!-- 게시판 글 총 개수 조회 -->
+  	<select id="getTotalCount" resultType="int">
+  		select count(bno) from tbl_board
+  	</select>
+  	<!-- 게시판 글 총 개수 조회 -->
   </mapper>

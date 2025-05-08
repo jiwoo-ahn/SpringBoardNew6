@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.itwillbs.domain.BoardVO;
+import com.itwillbs.domain.Criteria;
 
 /**
  *	BoardDAO 인터페이스 객체를 구현한 객체
@@ -87,5 +88,37 @@ public class BoardDAOImpl implements BoardDAO {
 		int result = sqlSession.delete(NAMESPACE + "deleteBoard", dvo);
 		
 		return result;
+	}
+	
+	@Override
+	public List<BoardVO> listPage(int page) throws Exception {
+		logger.info(" listPage(int page) 실행 ");
+		
+		// ${page} 정보(시작 위치 인덱스)를 전달
+		// page 정보를 필요한 해당 인덱스로 변환
+		// 1 page -> 0,10 | 2 page -> 10,10 | 3 page -> 20,10 ...
+		
+		// 촐력하는 페이지 번호를 사용해서 db 쿼리에 시작번호 전달하기
+		// 정상적인 페이지 범위가 아닐 때
+		if(page <= 0) {
+			// 첫번째 페이지를 보여줌
+			page = 1;
+		}
+		page = (page - 1) * 10;
+		
+		return sqlSession.selectList(NAMESPACE + "listPage", page);
+	}
+	
+	@Override
+	public List<BoardVO> listPage(Criteria cri) throws Exception {
+		logger.info(" listPage(Criteria cri) 실행 ");
+		
+		return sqlSession.selectList(NAMESPACE + "listCri", cri);
+	}
+	
+	@Override
+	public int getTotalCount() throws Exception {
+		logger.info(" getTotalCount() 호출 ");
+		return sqlSession.selectOne(NAMESPACE + "getTotalCount");
 	}
 }
