@@ -5,6 +5,7 @@
 
 <%@ include file="../include/header.jsp"%>
 	<!-- 참고하는 페이지의 요소와 class를 똑같이 주면 css도 똑같이 적용된다 -->
+	${pageVO}
 	<div class="content">
 		<h1>listAll.jsp</h1>
 		${result}
@@ -28,7 +29,7 @@
                 <tr>
                   <td>${vo.bno}</td>
                   <td>
-                  	<a href="/board/read?bno=${vo.bno}">${vo.title}</a>
+                  	<a href="/board/read?bno=${vo.bno}&page=${pageVO.cri.page}">${vo.title}</a>
                   </td>
                   <td>${vo.writer}</td>
                   <td><fmt:formatDate value="${vo.regdate}"/></td>
@@ -40,11 +41,19 @@
             <!-- /.box-body -->
             <div class="box-footer clearfix">
               <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">«</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">»</a></li>
+                <c:if test="${pageVO.prev}">
+                <li><a href="/board/listPage?page=${pageVO.startPage-1}">«</a></li>
+                </c:if>
+                
+                <c:forEach var="i" begin="${pageVO.startPage}" end="${pageVO.endPage}" step="1">
+	                <li class="${pageVO.cri.page == i? 'active' : ''}">
+	                	<a href="/board/listPage?page=${i}">${i}</a>
+	                </li>
+				</c:forEach>
+				
+				<c:if test="${pageVO.next}">
+                <li><a href="/board/listPage?page=${pageVO.endPage+1}">»</a></li>
+				</c:if>
               </ul>
             </div>
           </div>

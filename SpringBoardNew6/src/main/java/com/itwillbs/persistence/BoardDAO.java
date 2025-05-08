@@ -36,4 +36,7 @@ public interface BoardDAO {
 	// 게시판 목록 조회(+페이징 처리)
 	public List<BoardVO> listPage(int page) throws Exception;
 	public List<BoardVO> listPage(Criteria cri) throws Exception;
+	
+	// 게시판 글 총 개수
+	public int getTotalCount() throws Exception;
 }

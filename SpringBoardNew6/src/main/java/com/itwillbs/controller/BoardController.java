@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BoardVO;
 import com.itwillbs.domain.Criteria;
+import com.itwillbs.domain.PageVO;
 import com.itwillbs.service.BoardService;
 
 @Controller
@@ -73,7 +74,8 @@ public class BoardController {
 		// return "/board/listAll";
 		
 		// 이 동작이 끝나면 이 주소로 이동해라 라는 뜻 (주소도 바뀌고 화면도 바뀜)
-		return "redirect:/board/listAll";
+		//return "redirect:/board/listAll";
+		return "redirect:/board/listPage";
 	}
 	
 	// 게시판 목록 - GET
@@ -122,7 +124,7 @@ public class BoardController {
 	// listPage 주소를 불렀을 때 Criteria cri 객체를 담을 공간이 있어야 함
 	// Criteria cri 객체를 담을 공간이 있어야 listPage 페이지를 실행할 때
 	// 다른 페이지를 보고 싶을 때 적절한 페이지 번호를 출력하도록 Criteria cri를 조작(?할 수 있다
-	// Criteria cri를 통해 Criteria cri 를 통해 원하는 페이지를 출력할 수 있다.
+	// Criteria cri를 통해 Criteria cri 를 통해 원하는 페이지를 출력할 수 있다
 	public String listPageGET(Criteria cri, HttpSession session, 
 			               Model model, 
 			               @ModelAttribute("result") String result) throws Exception{
@@ -131,12 +133,28 @@ public class BoardController {
 		// 전달정보 result 저장
 		logger.info("result : " + result);
 		
+		// DB 데이터를 가져와서 화면(view)에 출력
+		// => 서비스 -> DAO 호출
+		//cri.setPage(1);
+		//cri.setPageSize(10);
+		
 		List<BoardVO> boardList = bService.getBoardListPage(cri);
 		
 		logger.info("boardList : {} 개", boardList.size());
 		
+		// 페이징 처리에 필요한 정보
+		PageVO pageVO = new PageVO();
+		//public String listPageGET(Criteria cri, HttpSession session, 
+        //  Model model, 
+        //  @ModelAttribute("result") String result) throws Exception{
+		//여기서 받은 cri를 pageVO의 매개변수로 전달
+		pageVO.setCri(cri);
+		//pageVO.setTotalCount(64);
+		pageVO.setTotalCount(bService.getTotalCount());
+		
 		// => 생성된 데이터를 뷰페이지에 전달 (컨트롤러의 정보를 -> jsp : Model객체)
 		model.addAttribute("boardList", boardList);
+		model.addAttribute("pageVO", pageVO);
 		
 		// 조회수 증가해도 되는지 안되는지 체크하기 위한 용도
 		// list에서 read 로 왔을 때만 true => 조회수 증가
@@ -200,7 +218,7 @@ public class BoardController {
 	
 	// 글정보 수정하기-POST
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public String modifyPOST(RedirectAttributes rttr,
+	public String modifyPOST(Criteria cri, RedirectAttributes rttr,
 			/*@ModelAttribute*/ BoardVO uvo) throws Exception {
 		logger.info("modifyPOST() 실행 ");
 		
@@ -217,14 +235,15 @@ public class BoardController {
 		// 리스트(글 목록) 페이지로 이동 + "수정 완료" alert 출력
 		rttr.addFlashAttribute("result", "modifyOK");
 		
-		return "redirect:/board/listAll";
+		//return "redirect:/board/listAll";
+		return "redirect:/board/listPage?page="+cri.getPage();
 	}
 	
 	// 게시판 글 삭제
 	// read.jsp에서 삭제버튼을 누를때 전달되는 bno 정보를 전달받기 위해
 	// BoardVO dvo 를 받아옴
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
-	public String removePOST(RedirectAttributes rttr, BoardVO dvo) throws Exception{
+	public String removePOST(Criteria cri, RedirectAttributes rttr, BoardVO dvo) throws Exception{
 		logger.info("removePOST(BoardVO dvo) 호출");
 		
 		// 전달된 정보(bno) 저장
@@ -237,11 +256,14 @@ public class BoardController {
 			rttr.addFlashAttribute("result", "deleteErr");
 			// 삭제 실패
 			//return "redirect:/board/read?bno="+dvo.getBno();
-			return "redirect:/board/listAll";
+			//return "redirect:/board/listAll";
+			return "redirect:/board/listPage?page="+cri.getPage();
 		}
+		
 		// 삭제 성공
 		rttr.addFlashAttribute("result", "deleteOK");
-		return "redirect:/board/listAll";
+		//return "redirect:/board/listAll";
+		return "redirect:/board/listPage?page="+cri.getPage();
 	}
 	
 }
