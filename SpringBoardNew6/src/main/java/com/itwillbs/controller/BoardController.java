@@ -1,8 +1,16 @@
 package com.itwillbs.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -13,6 +21,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BoardVO;
@@ -266,4 +276,107 @@ public class BoardController {
 		return "redirect:/board/listPage?page="+cri.getPage();
 	}
 	
+	// 파일 업로드
+	@RequestMapping(value = "/upload", method = RequestMethod.GET)
+	public void fileUploadGET() throws Exception {
+		logger.info(" fileUploadGET() 실행 ");
+	}
+	
+	// 파일 업로드 POST
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public String fileUploadPOST(MultipartHttpServletRequest multiRequest,
+								  Model model) throws Exception {
+		logger.info(" fileUploadPOST() 실행 ");
+		
+		// 파라메터 데이터
+		
+		// upload.jsp 에서 enctype을 지우면 콘솔에 title이 나타남
+		//logger.info(" title : " + multiRequest.getParameter("title"));
+		// => 예외발생
+		
+		Map map = new HashMap();
+		
+		// 파라메터 이름만 들고옴
+		Enumeration enu = multiRequest.getParameterNames();
+		while (enu.hasMoreElements()) { // 데이터가 있을 때 실행
+			// 다음 요소를 가져옴
+			String name = (String)enu.nextElement();
+			logger.info(" name : " + name); // 파라메터 이름 출력
+			String value = multiRequest.getParameter(name);
+			logger.info(" value : " + value); // 파라메터 값 출력
+			
+			map.put(name,value);
+		}
+		
+		logger.info(" 폼태그로 전달된 파라메터 정보 저장 완료! (파일 정보룰 제외한 나머지 정보 ");
+		logger.info(" map : " + map);
+		
+		// 파일업로드 데이터
+		List fileList = fileProcess(multiRequest);
+		
+		// 기존의 파라메터 정보를 저장한 map에
+		// 파일의 이름정보도 추가로 저장
+		
+		map.put("fileList", fileList);
+		logger.info(" map : " + map);
+		
+		model.addAttribute("map", map);
+		
+		return "/board/fileUploadResult";
+	}
+	
+	// 파일업로드를 처리하는 메서드
+	private List fileProcess(MultipartHttpServletRequest multiRequest) {
+		final String FAKE_PATH = "/upload";
+		
+		// 전송된 파일정보(이름)를 저장
+		List<String> fileList = new ArrayList<String>();
+		
+		// 파일정보(파라메터) 받아오기
+		Iterator<String> fileNames = multiRequest.getFileNames();
+		while (fileNames.hasNext()) { // 데이터 있을 때 처리
+			
+			String fileName = fileNames.next();
+			// => 폼태그로 전달한 input 태그의 파일 정보
+			MultipartFile mFile = multiRequest.getFile(fileName);
+			// => 임시로 전달받은 파일정보를 저장
+			
+			// 파일명 구하기
+			String oFileName = mFile.getOriginalFilename();
+			// 파일의 이름을 리스트에 저장
+			fileList.add(oFileName);
+			
+			// 파일정보 업로드
+			// getRealPath()를 통해서 서버의 주소(위치)를 찾는 작업
+			// ~~~~(서버주소)/upload\파일명
+			//File file = new File(multiRequest.getRealPath(FAKE_PATH) + "\\" + fileName);
+			File file = new File(multiRequest.getRealPath(FAKE_PATH) + "\\" + oFileName);
+			// => 원본 파일의 이름 전달
+			
+			if(mFile.getSize() != 0) { // 파일 업로드 정보가 있을 때
+				if(!file.exists()) { // ~~~~(서버주소)/upload\파일명 -> 경로에 해당하는 파일이 없으면
+					if(file.getParentFile().mkdirs()) { 
+						// 파일 폴더의 부모 파일 정보를 가져와서 make directory -> 파일의 부모 폴더를 생성하겠다
+						try {
+							file.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} //mkdirs
+				} //exists
+				// 경로에 정보가 있을 때
+				// 임시 파일의 정보를 해당 파일로 이동
+				try {
+					mFile.transferTo(file);
+					System.out.println(" 파일 업로드 성공! ");
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} //getSize
+		} //while
+		
+		return fileList;
+	}
 }
