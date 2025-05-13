@@ -18,8 +18,12 @@
 	내용 : 	${map.content }
 	
 	<c:forEach var="fileName" items="${map.fileList }">
-		파일명 : ${fileName }	 <br>
+		<%-- 파일명 : <a href="./upload/${fileName }">${fileName }</a> <br> --%>
+		파일명 : <a href="./download?fileName=${fileName }">${fileName }</a> <br>
+		<hr>
+		<img src="./download?fileName=${fileName }" width="100">
 	</c:forEach>
+	
 	
 </body>
 </html>
