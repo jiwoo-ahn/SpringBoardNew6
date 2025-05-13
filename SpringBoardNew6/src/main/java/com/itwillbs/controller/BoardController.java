@@ -34,6 +34,8 @@ import com.itwillbs.domain.Criteria;
 import com.itwillbs.domain.PageVO;
 import com.itwillbs.service.BoardService;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 @Controller
 @RequestMapping(value = "/board/*")
 public class BoardController {
@@ -354,7 +356,8 @@ public class BoardController {
 			// getRealPath()를 통해서 서버의 주소(위치)를 찾는 작업
 			// ~~~~(서버주소)/upload\파일명
 			//File file = new File(multiRequest.getRealPath(FAKE_PATH) + "\\" + fileName);
-			File file = new File(multiRequest.getRealPath(FAKE_PATH) + "\\" + oFileName);
+			//File file = new File(multiRequest.getRealPath(FAKE_PATH) + "\\" + oFileName);
+			File file = new File(multiRequest.getRealPath(FAKE_PATH) + File.separator + oFileName);
 			// => 원본 파일의 이름 전달
 			
 			if(mFile.getSize() != 0) { // 파일 업로드 정보가 있을 때
@@ -394,12 +397,32 @@ public class BoardController {
 		// 다운로드 하려는 폴더 == 업로드 했던 폴더
 		// => 업로드 해놨던 폴더의 정보 필요
 		final String FAKE_PATH = "/upload";
-		String downFile = request.getRealPath(FAKE_PATH) + "\\" + fileName;
+		//String downFile = request.getRealPath(FAKE_PATH) + "\\" + fileName;
+		String downFile = request.getRealPath(FAKE_PATH) + File.separator + fileName;
 		
 		// 다운로드할 파일 생성
 		File file = new File(downFile);
-		
 		String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+		
+		/****************************************************************/
+		// 파일 썸네일 만들기
+		// ex) 파일테스트.png
+		int lastIndex = encodedFileName.lastIndexOf(".");
+		String thumbFileName = encodedFileName.substring(0, lastIndex);
+		
+		// 업로드 폴더 밑에 썸네일 폴더를 만들어서 [thumbFileName].png 형태로 파일을 만들겠다
+		//File thumNail = new File(request.getRealPath(FAKE_PATH)+"\\"+"thumbnail"+"\\"+thumbFileName+".png");
+		File thumNail = new File(request.getRealPath(FAKE_PATH) 
+				+ File.separator + "thumbnail" 
+				+ File.separator + thumbFileName + ".png");
+		
+		if(file.exists()) {
+			thumNail.getParentFile().mkdirs();
+			Thumbnails.of(file).size(50, 50).outputFormat("png").toFile(thumNail);
+			logger.info("썸네일 생성 완료!");
+		}
+		
+		/****************************************************************/
 		
 		// 다운로드 정보를 출력할 객체
 		OutputStream out = response.getOutputStream();
@@ -424,4 +447,47 @@ public class BoardController {
 		fis.close();
 		out.close();
 	}
+	
+	// 썸네일 만들기 => 썸네일 저장 안 하고 가공해서 바로 보여주기 -> 디스크 차지 X
+		@RequestMapping(value = "/thumbnail", method = RequestMethod.GET)
+		public void thumbNailDownloadGET(@RequestParam("fileName") String fileName,
+									HttpServletRequest request,
+									HttpServletResponse response) throws Exception {
+			logger.info(" thumbNailDownloadGET() 실행 ");
+			
+			// 다운로드 하려는 폴더 == 업로드 했던 폴더
+			// => 업로드 해놨던 폴더의 정보 필요
+			final String FAKE_PATH = "/upload";
+			//String downFile = request.getRealPath(FAKE_PATH) + "\\" + fileName;
+			String downFile = request.getRealPath(FAKE_PATH) + File.separator + fileName;
+			
+			// 다운로드할 파일 생성
+			File file = new File(downFile);
+			String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+
+			// 다운로드 정보를 출력할 객체
+			OutputStream out = response.getOutputStream();
+			
+			/****************************************************************/
+			// 파일 썸네일 만들기
+			// ex) 파일테스트.png
+			int lastIndex = encodedFileName.lastIndexOf(".");
+			String thumbFileName = encodedFileName.substring(0, lastIndex);
+			
+			// 업로드 폴더 밑에 썸네일 폴더를 만들어서 [thumbFileName].png 형태로 파일을 만들겠다
+			//File thumNail = new File(request.getRealPath(FAKE_PATH)+"\\"+"thumbnail"+"\\"+thumbFileName+".png");
+			File thumNail = new File(request.getRealPath(FAKE_PATH) 
+					+ File.separator + "thumbnail" 
+					+ File.separator + thumbFileName + ".png");
+			
+			if(file.exists()) {
+				thumNail.getParentFile().mkdirs();
+				Thumbnails.of(file).size(50, 50).outputFormat("png").toOutputStream(out);
+				logger.info("썸네일 생성 완료!");
+			}
+			
+			/****************************************************************/
+			
+			out.close();
+		}
 }
